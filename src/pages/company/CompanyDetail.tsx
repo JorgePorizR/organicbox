@@ -2,6 +2,7 @@ import React from "react";
 import { Empresa } from "../../models/Empresa";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/main/Footer";
+import { Helmet } from "react-helmet";
 
 // Objeto de ejemplo
 const ejemploEmpresa: Empresa = {
@@ -29,6 +30,26 @@ const ejemploEmpresa: Empresa = {
 const CompanyDetail: React.FC = () => {
   return (
     <div className="relative bg-fondo min-h-screen">
+      {/* Helmet para SEO */}
+      <Helmet>
+        <title>{ejemploEmpresa.nombre} | OrganicBox</title>
+        <meta
+          name="description"
+          content={`${ejemploEmpresa.descripcion} Ubicación: ${ejemploEmpresa.direccion}. Contacto: ${ejemploEmpresa.telefono}.`}
+        />
+        <meta name="keywords" content="productos orgánicos, frescos, sostenibilidad, empresa orgánica" />
+        <meta name="author" content={`${ejemploEmpresa.propietario_data.user.first_name} ${ejemploEmpresa.propietario_data.user.last_name}`} />
+        <meta property="og:title" content={`${ejemploEmpresa.nombre} | OrganicBox`} />
+        <meta property="og:description" content={ejemploEmpresa.descripcion} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="http://localhost:5173/company-detail" />
+        <meta property="og:image" content="/path-to-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${ejemploEmpresa.nombre} | OrganicBox`} />
+        <meta name="twitter:description" content={ejemploEmpresa.descripcion} />
+        <meta name="twitter:image" content="/path-to-image.jpg" />
+      </Helmet>
+
       <div className="absolute right-20 top-4 shadow-md bg-black bg-opacity-15">
         <NavBar />
       </div>

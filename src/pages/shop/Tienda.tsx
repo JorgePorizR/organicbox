@@ -3,18 +3,25 @@ import Footer from "../../components/main/Footer";
 import NavBar from "../../components/NavBar";
 import { useCart } from "../../context/CartContext";
 import { Helmet } from "react-helmet";
-
-const products = [
-  { id: 1, name: "Producto 1", price: 20.0, image: "ruta/a/imagen1.png" },
-  { id: 2, name: "Producto 2", price: 15.0, image: "ruta/a/imagen2.png" },
-  { id: 3, name: "Producto 3", price: 30.0, image: "ruta/a/imagen3.png" },
-  { id: 4, name: "Producto 4", price: 25.0, image: "ruta/a/imagen4.png" },
-  { id: 5, name: "Producto 5", price: 10.0, image: "ruta/a/imagen5.png" },
-  { id: 6, name: "Producto 6", price: 18.0, image: "ruta/a/imagen6.png" },
-];
+import { useEffect, useState } from "react";
+import { Producto } from "../../models/Producto";
+import { ProductoService } from "../../services/ProductoService";
+import repollo from "../../assets/repollo.webp";
 
 function Tienda() {
   const { addToCart } = useCart();
+  const [productos, setProductos] = useState<Producto[]>([]);
+
+  useEffect(() => {
+    new ProductoService()
+      .getProductoList()
+      .then((response) => {
+        setProductos(response);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la lista de productos:", error);
+      });
+  }, []);
 
   return (
     <div className="bg-fondo pt-10">
@@ -54,24 +61,27 @@ function Tienda() {
           Tienda
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {products.map((product) => (
+          {productos.map((producto) => (
             <div
-              key={product.id}
+              key={producto.nombre}
               className="bg-verdeclaro py-4 sm:py-6 px-4 sm:px-8 rounded-3xl shadow-md"
             >
               <img
-                src={product.image}
-                alt={product.name}
+                src={repollo}
+                alt={producto.nombre}
                 className="w-full h-36 lg:h-40 xl:h-60 object-cover mb-2 bg-negropaco"
               />
               <h2 className="text-base sm:text-lg font-semibold">
-                {product.name}
+                {producto.nombre}
               </h2>
               <p className="text-gray-700 text-sm sm:text-base">
-                ${product.price.toFixed(2)}
+                Empresa: {producto.empresa}
+              </p>
+              <p className="text-gray-700 text-sm sm:text-base">
+                ${producto.costo_puntos ?? 0}
               </p>
               <button
-                onClick={() => addToCart({ ...product, quantity: 1 })}
+                onClick={() => addToCart({ ...producto, id: producto.id ?? 0, name: producto.nombre, price: producto.costo_puntos ?? 0, quantity: 1 })}
                 className="mt-2 bg-verdeob text-white p-2 rounded-full transition duration-300 ease-in-out hover:bg-white hover:text-black"
               >
                 Agregar al Carrito
