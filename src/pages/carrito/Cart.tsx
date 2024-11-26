@@ -3,6 +3,7 @@ import Footer from "../../components/main/Footer";
 import NavBar from "../../components/NavBar";
 import DeleteIcon from "../../components/icons/DeleteIcon";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -14,6 +15,14 @@ const Cart = () => {
 
   return (
     <div className="relative bg-fondo">
+      <Helmet>
+        <title>Carrito de Compras - OrganicBox</title>
+        <meta
+          name="description"
+          content="Revisa tu carrito de compras en OrganicBox. Gestiona tus productos y finaliza tu compra fácilmente."
+        />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
       <div className="absolute right-20 top-4 shadow-md bg-black bg-opacity-15">
         <NavBar />
       </div>

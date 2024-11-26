@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import VisitIcon from "../../components/icons/VisitIcon";
 import Footer from "../../components/main/Footer";
 import NavBar from "../../components/NavBar";
+import { Helmet } from "react-helmet";
 
 const negocios = [
   { id: 1, name: "Negocio Local 1", image: "ruta/a/imagen1.png" },
@@ -16,6 +17,35 @@ function NegociosLocals() {
   const navigate = useNavigate();
   return (
     <div className="bg-fondo pt-10">
+      <Helmet>
+        {/* Título y descripción específicos */}
+        <title>Negocios Locales - OrganicBox</title>
+        <meta
+          name="description"
+          content="Explora los negocios locales inscritos en OrganicBox. Encuentra productos orgánicos y sostenibles de comerciantes locales cerca de ti."
+        />
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph para redes sociales */}
+        <meta property="og:title" content="Negocios Locales - OrganicBox" />
+        <meta
+          property="og:description"
+          content="Descubre negocios locales con productos orgánicos y sostenibles en OrganicBox."
+        />
+        <meta property="og:image" content="/ruta/a/una/imagen-destacada.png" />
+        <meta property="og:url" content="http://localhost:3000/negocios" />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Negocios Locales - OrganicBox" />
+        <meta
+          name="twitter:description"
+          content="Apoya negocios locales con productos orgánicos en OrganicBox."
+        />
+        <meta name="twitter:image" content="/ruta/a/una/imagen-destacada.png" />
+      </Helmet>
+
       <div className="relative bg-verdeob p-5 sm:p-10 mx-4 md:mx-10 lg:mx-36 rounded-3xl mb-10">
       <div className="absolute right-14 top-4 shadow-md bg-black bg-opacity-15">
         <NavBar />

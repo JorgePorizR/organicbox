@@ -2,12 +2,21 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../../components/main/Footer";
 import logo from "../../assets/logo.webp";
 import vector from "../../assets/vector.webp";
+import { Helmet } from "react-helmet";
 
 function Register() {
   const navigation = useNavigate();
 
   return (
     <div className="bg-fondo min-h-screen flex flex-col justify-center items-center">
+      <Helmet>
+        <title>Registro de Usuario - OrganicBox</title>
+        <meta
+          name="description"
+          content="Crea tu cuenta en OrganicBox para acceder a productos orgánicos y sostenibles con opciones personalizadas."
+        />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
       <div className="flex flex-col py-10 items-center w-full max-w-md mx-auto">
         <div className="relative flex justify-center items-center mb-8">
           <img src={logo} alt="Logo" className="mr-2 size-20" />

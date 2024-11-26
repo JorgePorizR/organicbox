@@ -2,6 +2,7 @@ import { ToastContainer } from "react-toastify";
 import Footer from "../../components/main/Footer";
 import NavBar from "../../components/NavBar";
 import { useCart } from "../../context/CartContext";
+import { Helmet } from "react-helmet";
 
 const products = [
   { id: 1, name: "Producto 1", price: 20.0, image: "ruta/a/imagen1.png" },
@@ -17,6 +18,34 @@ function Tienda() {
 
   return (
     <div className="bg-fondo pt-10">
+      <Helmet>
+        {/* Título y descripción para SEO */}
+        <title>Tienda Online - OrganicBox</title>
+        <meta
+          name="description"
+          content="Descubre productos destacados y más vendidos en OrganicBox. Explora nuestra tienda con artículos orgánicos y sostenibles que se adaptan a tus necesidades."
+        />
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph para redes sociales */}
+        <meta property="og:title" content="Tienda Online - OrganicBox" />
+        <meta
+          property="og:description"
+          content="Encuentra productos orgánicos más vendidos y destacados en nuestra tienda en OrganicBox."
+        />
+        <meta property="og:image" content="/ruta/a/una/imagen-destacada.png" />
+        <meta property="og:url" content="http://localhost:3000/tienda" />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Tienda Online - OrganicBox" />
+        <meta
+          name="twitter:description"
+          content="Explora nuestra tienda de productos destacados y orgánicos. OrganicBox, apoyando sostenibilidad."
+        />
+        <meta name="twitter:image" content="/ruta/a/una/imagen-destacada.png" />
+      </Helmet>
       <div className="relative bg-verdeob p-5 sm:p-10 mx-4 md:mx-10 lg:mx-36 rounded-3xl mb-10">
         <div className="absolute right-14 top-4 shadow-md bg-black bg-opacity-15">
           <NavBar />
