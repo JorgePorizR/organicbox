@@ -6,6 +6,7 @@ import NegociosLocals from "../pages/shop/NegociosLocals";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import PaymentPage from "../pages/PaymentPage";
+import CompanyDetail from "../pages/company/CompanyDetail";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
   {
     path: "/payment",
     element: <PaymentPage />
+  },
+  {
+    path: "/company/detail",
+    element: <CompanyDetail />
   },
   {
     path: "*",

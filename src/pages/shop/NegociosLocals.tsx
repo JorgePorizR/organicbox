@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import VisitIcon from "../../components/icons/VisitIcon";
 import Footer from "../../components/main/Footer";
 import NavBar from "../../components/NavBar";
@@ -12,6 +13,7 @@ const negocios = [
 ];
 
 function NegociosLocals() {
+  const navigate = useNavigate();
   return (
     <div className="bg-fondo pt-10">
       <div className="relative bg-verdeob p-5 sm:p-10 mx-4 md:mx-10 lg:mx-36 rounded-3xl mb-10">
@@ -26,6 +28,7 @@ function NegociosLocals() {
             <div
               key={negocio.id}
               className="bg-verdeclaro py-4 sm:py-6 px-4 sm:px-8 rounded-3xl shadow-md"
+              onClick={() => navigate("/company/detail")}
             >
               <img
                 src={negocio.image}
