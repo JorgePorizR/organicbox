@@ -2,16 +2,19 @@ import { useCart } from "../../context/CartContext";
 import Footer from "../../components/main/Footer";
 import NavBar from "../../components/NavBar";
 import DeleteIcon from "../../components/icons/DeleteIcon";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 const Cart = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const { cart, updateQuantity, removeFromCart } = useCart();
 
   const subtotal = cart
     .reduce((acc, product) => acc + product.price * product.quantity, 0)
     .toFixed(2);
+
+  // URL de la página de donaciones de StreamElements
+  const donationPageUrl = "https://streamelements.com/jorgeporizrojas949/tip"; // Reemplaza con tu URL de donación
 
   return (
     <div className="relative bg-fondo">
@@ -70,8 +73,11 @@ const Cart = () => {
             <span className="font-semibold">Su Subtotal</span>
             <span className="font-semibold">Subtotal ${subtotal}</span>
           </div>
-          <button className="bg-verdeob text-white py-2 px-4 rounded mt-4"
-          onClick={() => navigate("/payment")}>
+          <button 
+            className={`bg-verdeob text-white py-2 px-4 rounded mt-4 ${parseInt(subtotal) <= 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => parseInt(subtotal) > 0 && window.open(donationPageUrl, "_blank")} // Abrir en una nueva pestaña
+            disabled={parseInt(subtotal) <= 0} // Deshabilitar el botón si el subtotal es 0 o menor
+          >
             Confirmar Orden
           </button>
         </div>
