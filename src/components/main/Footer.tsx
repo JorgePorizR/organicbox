@@ -14,7 +14,7 @@ const Footer = () => {
       <div className="flex flex-col md:flex-row justify-between items-center mt-10">
         <div className="flex flex-col w-full md:w-1/3 z-10 mb-6 md:mb-0">
           <a href="/" className="text-verdeob text-base lg:text-lg xl:text-xl">Sitemap</a>
-          <div className="flex flex-col md:flex-row sm:space-x-3 lg:space-x-4 xl:space-x-8 mt-8 text-sm lg:text-base xl:text-lg">
+          <div className="flex flex-col md:flex-row md:px-2 sm:space-x-3 lg:space-x-4 xl:space-x-8 mt-8 text-sm lg:text-base xl:text-lg">
             <a onClick={() => navigation("/")} className="cursor-pointer">
               Inicio
             </a>
