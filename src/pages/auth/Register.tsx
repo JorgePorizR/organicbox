@@ -11,7 +11,6 @@ import { UserService } from "../../services/UsuarioService";
 function Register() {
   const navigate = useNavigate();
 
-
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -47,8 +46,12 @@ function Register() {
     try {
       const userService = new UserService();
       const response = await userService.userCreate(usuario);
-      setMessage("Usuario creado con éxito.");
-      setTimeout(() => navigate("/user/login"), 2000); // Redirige al login después de 2s
+      if (response) {
+        setMessage("Usuario creado con éxito.");
+        setTimeout(() => navigate("/user/login"), 2000); // Redirige al login después de 2s
+      } else {
+        setMessage("Error al crear el usuario. Intenta de nuevo.");
+      } // Redirige al login después de 2s
     } catch (error) {
       setMessage("Error al crear el usuario. Intenta de nuevo.");
       console.error(error);
@@ -78,7 +81,9 @@ function Register() {
           />
         </div>
         <div className="bg-verdeob p-6 rounded-lg shadow-md w-full text-white">
-          <h2 className="text-2xl text-center font-semibold mb-4">CREA TU CUENTA</h2>
+          <h2 className="text-2xl text-center font-semibold mb-4">
+            CREA TU CUENTA
+          </h2>
           <form className="flex flex-col items-center" onSubmit={crearUsuario}>
             <label className="block mb-5 w-full">
               USUARIO:
@@ -142,7 +147,9 @@ function Register() {
               CREAR
             </button>
           </form>
-          {message && <p className="mt-4 text-center font-semibold">{message}</p>}
+          {message && (
+            <p className="mt-4 text-center font-semibold">{message}</p>
+          )}
           <p className="mt-4 text-center">
             ¿Ya tienes una cuenta?
             <span
