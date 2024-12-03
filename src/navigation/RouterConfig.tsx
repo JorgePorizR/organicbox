@@ -5,9 +5,9 @@ import Tienda from "../pages/shop/Tienda";
 import NegociosLocals from "../pages/shop/NegociosLocals";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
-import PaymentPage from "../pages/PaymentPage";
 import CompanyDetail from "../pages/company/CompanyDetail";
 import Contact from "../pages/contact/Contact";
+import PaymentPage from "../pages/PaymentCard/PaymentPage";
 
 export const router = createBrowserRouter([
   {
@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
     element: <PaymentPage />
   },
   {
-    path: "/company/detail",
+    path: "/company/detail/:id",
     element: <CompanyDetail />
   },
   {

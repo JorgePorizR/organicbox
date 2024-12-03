@@ -1,11 +1,10 @@
-
-import { Producto } from "../models/Producto";
+import { Suscripcion } from "../models/Suscripcion";
 import apiClient from "./interceptor";
 
-export class ProductoService {
-    getProductoList() {
-        return new Promise<Producto[]>((resolve, reject) => {
-            apiClient.get('productos/')
+export class SuscripcionService {
+    getSuscripcionListByEmpresa(idEmpresa?: string) {
+        return new Promise<Suscripcion[]>((resolve, reject) => {
+            apiClient.get(`empresas/${idEmpresa}/suscripciones/`)
                 .then((response) => {
                     resolve(response.data);
                 }).catch((error) => {
@@ -15,9 +14,9 @@ export class ProductoService {
         });
     }
 
-    getProductoListByEmpresa(idEmpresa?: string) {
-        return new Promise<Producto[]>((resolve, reject) => {
-            apiClient.get(`empresas/${idEmpresa}/productos/`)
+    getSuscripcionById(idSuscripcion?: string) {
+        return new Promise<Suscripcion>((resolve, reject) => {
+            apiClient.get(`suscripciones_empresa/${idSuscripcion}/`)
                 .then((response) => {
                     resolve(response.data);
                 }).catch((error) => {

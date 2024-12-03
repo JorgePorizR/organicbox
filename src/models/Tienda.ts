@@ -1,6 +1,7 @@
 import { Usuario } from "./Usuario";
 
 export interface Tienda {
+    id?:          string;
     nombre:      string;
     descripcion: string;
     direccion:   string;

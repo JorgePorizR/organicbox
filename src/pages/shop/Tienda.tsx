@@ -1,16 +1,15 @@
-import { ToastContainer } from "react-toastify";
 import Footer from "../../components/main/Footer";
 import NavBar from "../../components/NavBar";
-import { useCart } from "../../context/CartContext";
 import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import { Producto } from "../../models/Producto";
 import { ProductoService } from "../../services/ProductoService";
 import repollo from "../../assets/repollo.webp";
+import { useNavigate } from "react-router-dom";
 
 function Tienda() {
-  const { addToCart } = useCart();
   const [productos, setProductos] = useState<Producto[]>([]);
+  const navigation = useNavigate();
 
   useEffect(() => {
     new ProductoService()
@@ -81,10 +80,10 @@ function Tienda() {
                 ${producto.costo_puntos ?? 0}
               </p>
               <button
-                onClick={() => addToCart({ ...producto, id: producto.id ?? 0, name: producto.nombre, price: producto.costo_puntos ?? 0, quantity: 1 })}
+                onClick={() => navigation("/company/detail/" + producto.empresa)}
                 className="mt-2 bg-verdeob text-white p-2 rounded-full transition duration-300 ease-in-out hover:bg-white hover:text-black"
               >
-                Agregar al Carrito
+                Visitar
               </button>
             </div>
           ))}
@@ -96,7 +95,6 @@ function Tienda() {
         </div>
       </div>
       <Footer />
-      <ToastContainer className="max-w-80 mx-auto" />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import MenuIcon from "./icons/MenuIcon";
 import CloseIcon from "./icons/CloseIcon";
 import UserIcon from "./icons/UserIcon";
+import CartIcon from "./icons/CartIcon";
 
 function NavBar() {
   const navigation = useNavigate();
@@ -26,8 +27,8 @@ function NavBar() {
         <a onClick={() => navigation("/tienda")} className="hover:text-verdeob cursor-pointer">
           Tienda
         </a>
-        <a onClick={() => navigation("/cart")} className="hover:text-verdeob cursor-pointer">
-          Cart
+        <a onClick={() => navigation("/cart")} className="hover:text-verdeob cursor-pointer flex gap-x-2">
+          <CartIcon /> Cart
         </a>
         <a onClick={() => navigation("/user/login")} className="hover:text-verdeob cursor-pointer">
           <UserIcon className="size-10 p-2 bg-negropaco rounded-full hover:bg-white"/>

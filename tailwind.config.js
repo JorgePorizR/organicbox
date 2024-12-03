@@ -25,6 +25,7 @@ module.exports = {
       'pielos': '#F1D5BB',
       'fondo': '#FFF2D8',
       'negropaco': '#333333',
+      'rojo': '#FF0000',
     }
   },
   plugins: [],

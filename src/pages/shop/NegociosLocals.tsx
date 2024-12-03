@@ -67,7 +67,6 @@ function NegociosLocals() {
               <div
                 key={tienda.nombre}
                 className="bg-verdeclaro py-4 sm:py-6 px-4 sm:px-8 rounded-3xl shadow-md"
-                onClick={() => navigate(`/company/detail`)}
               >
                 <img
                   src={repollo}
@@ -79,6 +78,7 @@ function NegociosLocals() {
                 <button
                   className="mt-2 bg-verdeob text-white p-2 rounded-full transition duration-300 ease-in-out hover:bg-white hover:text-black"
                   title="visitar"
+                  onClick={() => navigate(`/company/detail/${tienda.id}`)}
                 >
                   <VisitIcon />
                 </button>

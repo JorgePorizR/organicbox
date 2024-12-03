@@ -14,12 +14,16 @@ function Login() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Evita el comportamiento predeterminado del formulario
-    setError(null);
+    setError(null); // Limpia el error
 
     const userService = new UserService();
     try {
       const response = await userService.userLogin(username, password);
       console.log("Login exitoso:", response);
+
+      sessionStorage.setItem("userId", response.username_id.toString());
+      sessionStorage.setItem("username", response.username);
+      
       navigation("/");
     } catch (err) {
       console.error("Error al iniciar sesión:", err);

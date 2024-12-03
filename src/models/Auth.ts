@@ -3,4 +3,5 @@ export interface Auth {
     username: string;
     is_admin: boolean;
     has_empresa: boolean;
+    username_id: number;
 }
