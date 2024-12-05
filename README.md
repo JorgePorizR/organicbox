@@ -30,8 +30,10 @@ Sigue estos pasos para clonar y ejecutar el proyecto en tu máquina local:
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 cd <NOMBRE_DEL_PROYECTO>
+```
 
 ## 2. Instalar dependencias
 ### Ejecutar el siguiente comando para instalar las dependencias necesarias
-
+```bash
 - yarn install
+```
