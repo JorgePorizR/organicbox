@@ -7,7 +7,7 @@ import PaymentGateway from "../PaymentGateway";
 import CardAddIcon from "../icons/CardAddIcon";
 import CloseIcon from "../icons/CloseIcon";
 
-const Cards: React.FC = () => {
+const CardsPage: React.FC = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
@@ -109,4 +109,4 @@ const Cards: React.FC = () => {
   );
 };
 
-export default Cards;
+export default CardsPage;

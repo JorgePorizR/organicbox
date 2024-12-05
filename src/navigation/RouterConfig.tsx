@@ -9,7 +9,7 @@ import CompanyDetail from "../pages/company/CompanyDetail";
 import Contact from "../pages/contact/Contact";
 import PaymentPage from "../pages/PaymentCard/PaymentPage";
 import History from "../components/user/History";
-import Cards from "../components/user/Cards";
+import CardsPage from "../components/user/CardsPage";
 
 export const router = createBrowserRouter([
   {
@@ -54,7 +54,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/user/tarjetas",
-    element: <Cards />
+    element: <CardsPage />
   },
   {
     path: "*",

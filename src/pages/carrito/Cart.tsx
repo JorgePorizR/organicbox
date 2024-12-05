@@ -10,17 +10,24 @@ import { Compra } from "../../models/Compra";
 import { SuscripcionService } from "../../services/SuscripcionService";
 import { useEffect, useState } from "react";
 import { Suscripcion } from "../../models/Suscripcion";
+import { Card } from "../../models/Card";
+import { UserService } from "../../services/UsuarioService";
 
 const Cart = () => {
   //const navigate = useNavigate();
-  const { cart, updateQuantity, removeFromCart } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
   const navigation = useNavigate();
   const [suscripcion, setSuscripcion] = useState<Suscripcion>();
+  const [cards, setCards] = useState<Card[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("");
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
   const userId = sessionStorage.getItem("userId");
   const username = sessionStorage.getItem("username");
   const suscripcionId = sessionStorage.getItem("suscripcion");
-  const empresaId = sessionStorage.getItem("empresa");
+  //const empresaId = sessionStorage.getItem("empresa");
 
   const subtotal = cart
     .reduce((acc, product) => acc + product.price * product.quantity, 0)
@@ -30,50 +37,95 @@ const Cart = () => {
   const donationPageUrl = "https://streamelements.com/jorgeporizrojas949/tip"; // Reemplaza con tu URL de donación
 
   useEffect(() => {
+    if (userId) {
+      console.log("User ID found in sessionStorage:", userId);
+      const fetchCards = async () => {
+        try {
+          const userService = new UserService();
+          const data = await userService.getCardsByUser(userId);
+          setCards(data);
+        } catch (error) {
+          console.error("Error fetching cards:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchCards();
+    } else {
+      console.error("User ID not found in sessionStorage");
+      setLoading(false);
+    }
+    const fetchSuscripcion = () => {
+      // Lógica para obtener la suscripción del usuario
+      new SuscripcionService()
+        .getSuscripcionById(suscripcionId?.toString())
+        .then((suscripcion) => {
+          console.log("Suscripción del usuario", suscripcion);
+          setSuscripcion(suscripcion);
+        })
+        .catch((error) => {
+          console.error("Error al obtener la suscripción", error);
+        }) .finally(() => {
+          setLoading(false);
+        }
+      );
+    };
     fetchSuscripcion();
-  }, []);
+  }, [userId]);
 
-  const fetchSuscripcion = () => {
-    // Lógica para obtener la suscripción del usuario
-    new SuscripcionService().getSuscripcionById(suscripcionId?.toString())
-      .then((suscripcion) => {
-        console.log("Suscripción del usuario", suscripcion);
-        setSuscripcion(suscripcion);
-      })
-      .catch((error) => {
-        console.error("Error al obtener la suscripción", error);
-      });
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   const handleConfirmOrder = () => {
-    console.log("Usuario ID", userId);
-    console.log("Username", username);
-    console.log("ID de suscripción", suscripcionId);
-    console.log("ID de empresa", empresaId);
-    console.log("Productos en el carrito", cart);
-
     if (parseFloat(subtotal) > parseFloat(suscripcion?.monto_total_puntos || "0")) {
       window.alert("Excedes los puntos de tu suscripción para realizar la compra.");
       return;
     }
 
-    if (username && userId) {
+    if (!selectedPaymentMethod) {
+      window.alert("Por favor, selecciona un método de pago.");
+      return;
+    }
 
+    if (selectedPaymentMethod === "tarjeta" && !selectedCardId) {
+      window.alert("Por favor, selecciona una tarjeta.");
+      return;
+    }
+
+    if (username && userId) {
       const expandedCart = cart.flatMap((product) =>
         Array(product.quantity).fill(product.id)
       );
 
-      const compra: Compra = {
-        usuario: parseInt(userId),
-        suscripcion: parseInt(suscripcionId ? suscripcionId : "0"),
-        productos: expandedCart
-      };
+      let compra: Compra;
+      if (selectedPaymentMethod === "tarjeta") {
+          compra = {
+          usuario: parseInt(userId),
+          suscripcion: parseInt(suscripcionId || "0"),
+          metodo_pago: parseInt(selectedCardId || "0"),
+          productos: expandedCart,
+        };
+      } else {
+        compra = {
+          usuario: parseInt(userId),
+          suscripcion: parseInt(suscripcionId || "0"),
+          productos: expandedCart,
+        };
+      }
 
-      new CompraService().createCompra(compra)
+      new CompraService()
+        .createCompra(compra)
         .then(() => {
           window.alert("¡Gracias por tu compra! 🛒");
-          window.open(donationPageUrl, "_blank");
-          navigation("/");
+          if (selectedPaymentMethod === "paypal") {
+            window.open(donationPageUrl, "_blank");
+            navigation("/");
+          } else {
+            window.location.href = "/";
+          }
+          sessionStorage.removeItem("suscripcion");
+          clearCart();
         })
         .catch((error) => {
           console.error("Error al realizar la compra", error);
@@ -82,7 +134,7 @@ const Cart = () => {
       window.alert("Por favor, inicia sesión para confirmar tu orden.");
       navigation("/user/login");
     }
-  }
+  };
 
   return (
     <div className="relative bg-fondo">
@@ -134,16 +186,17 @@ const Cart = () => {
                   <DeleteIcon className="text-black" />
                 </button>
               </div>
-              <span className="text-sm sm:text-base">${(product.price * product.quantity).toFixed(2)}</span>
+              <span className="text-sm sm:text-base">
+                ${(product.price * product.quantity).toFixed(2)}
+              </span>
             </div>
           ))}
-          {
-            parseFloat(subtotal) > parseFloat(suscripcion?.monto_total_puntos || "0") && (
-              <div className="text-rojo text-sm mt-2">
-                No tienes suficientes puntos para realizar la compra.
-              </div>
-            )
-          }
+          {parseFloat(subtotal) >
+            parseFloat(suscripcion?.monto_total_puntos || "0") && suscripcionId && (
+            <div className="text-rojo text-sm mt-2">
+              No tienes suficientes puntos para realizar la compra.
+            </div>
+          )}
           <div className="flex justify-between items-center mt-2 pt-2">
             <span className="font-semibold">Subtotal</span>
             <span className="font-semibold">${subtotal}</span>
@@ -154,10 +207,59 @@ const Cart = () => {
           </div>
           <div className="flex justify-between items-center mt-2 pt-2">
             <span className="font-semibold">Total</span>
-            <span className="font-semibold">${parseFloat(subtotal) + parseFloat(suscripcion?.costo || "0")}</span>
+            <span className="font-semibold">
+              ${parseFloat(subtotal) + parseFloat(suscripcion?.costo || "0")}
+            </span>
           </div>
-          <button 
-            className={`bg-verdeob text-white py-2 px-4 rounded mt-4 ${parseInt(subtotal) <= 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          {/* Opciones de método de pago */}
+          <div className="flex flex-col mt-4">
+            <label className="font-semibold mb-2">Método de Pago</label>
+            <div className="flex items-center mb-2">
+              <input
+                type="radio"
+                id="tarjeta"
+                name="metodoPago"
+                value="tarjeta"
+                onChange={(e) => {
+                  setSelectedPaymentMethod(e.target.value);
+                  setSelectedCardId(null);
+                }}
+                checked={selectedPaymentMethod === "tarjeta"}
+              />
+              <label htmlFor="tarjeta" className="ml-2">Tarjeta</label>
+            </div>
+            {selectedPaymentMethod === "tarjeta" && (
+              <select
+                className="bg-gray-200 p-2 rounded"
+                onChange={(e) => setSelectedCardId(e.target.value)}
+              >
+                <option value="">Selecciona una tarjeta</option>
+                {cards.map((card) => (
+                  <option key={card.id} value={card.id}>
+                    {card.numero_tarjeta.replace(/\d(?=\d{4})/g, "*")}
+                  </option>
+                ))}
+              </select>
+            )}
+            <div className="flex items-center mt-2">
+              <input
+                type="radio"
+                id="paypal"
+                name="metodoPago"
+                value="paypal"
+                onChange={(e) => {
+                  setSelectedPaymentMethod(e.target.value);
+                  setSelectedCardId(null);
+                }}
+                checked={selectedPaymentMethod === "paypal"}
+              />
+              <label htmlFor="paypal" className="ml-2">PayPal</label>
+            </div>
+          </div>
+          <button
+            className={`bg-verdeob text-white py-2 px-4 rounded mt-4 ${
+              parseInt(subtotal) <= 0 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={handleConfirmOrder} // Abrir en una nueva pestaña
             disabled={parseFloat(subtotal) <= 0} // Deshabilitar el botón si el subtotal es 0 o menor o si supera el monto total de puntos
           >
