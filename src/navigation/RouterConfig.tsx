@@ -8,6 +8,8 @@ import Register from "../pages/auth/Register";
 import CompanyDetail from "../pages/company/CompanyDetail";
 import Contact from "../pages/contact/Contact";
 import PaymentPage from "../pages/PaymentCard/PaymentPage";
+import History from "../components/user/History";
+import Cards from "../components/user/Cards";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +47,14 @@ export const router = createBrowserRouter([
   {
     path: "/contact",
     element: <Contact />
+  },
+  {
+    path: "/user/historial",
+    element: <History />
+  },
+  {
+    path: "/user/tarjetas",
+    element: <Cards />
   },
   {
     path: "*",

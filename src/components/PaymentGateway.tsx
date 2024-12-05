@@ -1,10 +1,7 @@
 import { useState } from "react";
 import Cards, { Focused } from "react-credit-cards-2";
-
-import NavBar from "./NavBar";
-import Footer from "./main/Footer";
-// react credit cards styles
-//import 'react-credit-cards-2/dist/es/styles-compiled.css';
+import { AddCard } from "../models/AddCard";
+import { UserService } from "../services/UsuarioService";
 
 const PaymentGateway = () => {
   const [state, setState] = useState({
@@ -35,12 +32,46 @@ const PaymentGateway = () => {
     setState((prev) => ({ ...prev, focus: evt.target.name }));
   };
 
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    const userId = sessionStorage.getItem("userId");
+    const cardData: AddCard = {
+      nombre_titular: state.name,
+      numero_tarjeta: state.number,
+      fecha_expiracion: state.expiry,
+      cvv: state.cvc,
+      es_visa: state.number.startsWith("4"),
+    };
+
+    console.log("Usuario ID:", userId);
+    console.log("Datos de la tarjeta:", cardData);
+
+    if (userId) {
+      const userService = new UserService();
+      try {
+        await userService.addCardByUser(userId, cardData);
+        alert("Tarjeta agregada exitosamente.");
+        setState({
+          number: "",
+          name: "",
+          expiry: "",
+          cvc: "",
+          focus: "",
+        });
+        window.location.reload();
+      } catch (error) {
+        console.error("Error al agregar la tarjeta:", error);
+        alert("Error al agregar la tarjeta. Inténtalo de nuevo.");
+      }
+    } else {
+      alert("No se encontró el ID de usuario.");
+    }
+  };
+
   return (
-    <div className="relative bg-fondo">
-      <div className="absolute right-20 top-4 shadow-md bg-black bg-opacity-15">
-        <NavBar />
-      </div>
-      <div className="h-screen grid place-content-center bg-indigo-300 p-4">
+    <div className="">
+      <div className="grid place-content-center bg-indigo-300 p-4">
         <Cards
           number={state.number}
           name={state.name}
@@ -48,7 +79,7 @@ const PaymentGateway = () => {
           cvc={state.cvc}
           focused={state.focus as Focused | undefined}
         />
-        <form className="mt-5 grid grid-cols-1 gap-4">
+        <form className="mt-5 grid grid-cols-1 gap-4" onSubmit={handleSubmit}>
           <input
             type="number"
             name="number"
@@ -57,7 +88,7 @@ const PaymentGateway = () => {
             value={state.number}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
-            maxLength={16} // Limitar a 16 dígitos
+            maxLength={16}
             required
           />
           <input
@@ -80,7 +111,7 @@ const PaymentGateway = () => {
             onChange={handleInputChange}
             onFocus={handleInputFocus}
             autoComplete="off"
-            pattern="\d{2}/\d{2}" // Format MM/YY
+            pattern="\d{2}/\d{2}"
             required
           />
           <input
@@ -92,13 +123,18 @@ const PaymentGateway = () => {
             onChange={handleInputChange}
             onFocus={handleInputFocus}
             autoComplete="off"
-            min="100" // Minimum 3 digits for CVC
-            max="999" // Maximum 3 digits for CVC
+            min="100"
+            max="999"
             required
           />
+          <button
+            type="submit"
+            className="bg-verdeob text-white p-2 rounded-lg hover:bg-verdeclaro transition duration-300"
+          >
+            Agregar
+          </button>
         </form>
       </div>
-      <Footer />
     </div>
   );
 };

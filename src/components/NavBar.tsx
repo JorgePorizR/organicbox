@@ -4,6 +4,9 @@ import MenuIcon from "./icons/MenuIcon";
 import CloseIcon from "./icons/CloseIcon";
 import UserIcon from "./icons/UserIcon";
 import CartIcon from "./icons/CartIcon";
+import CardIcon from "./icons/CardIcon";
+import LogoutIcon from "./icons/LogoutIcon";
+import HistoryIcon from "./icons/HistoryIcon";
 
 function NavBar() {
   const navigation = useNavigate();
@@ -11,11 +14,22 @@ function NavBar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  const userId = sessionStorage.getItem("userId");
+  const username = sessionStorage.getItem("username");
+
+  const [isLogged, setIsLogged] = useState(false);
+
+  const handleClickUser = () => setIsLogged(!isLogged);
+
+
   return (
     <nav className="relative">
       {/* Desktop Menu */}
       <div className="hidden md:flex p-2 xl:p-4 text-white font-semibold text-sm lg:text-base xl:text-xl space-x-6 lg:space-x-12 xl:space-x-24">
-        <a onClick={() => navigation("/")} className="hover:text-verdeob cursor-pointer">
+        <a
+          onClick={() => navigation("/")}
+          className="hover:text-verdeob cursor-pointer"
+        >
           Inicio
         </a>
         <a
@@ -24,15 +38,64 @@ function NavBar() {
         >
           Negocios Locales
         </a>
-        <a onClick={() => navigation("/tienda")} className="hover:text-verdeob cursor-pointer">
+        <a
+          onClick={() => navigation("/tienda")}
+          className="hover:text-verdeob cursor-pointer"
+        >
           Tienda
         </a>
-        <a onClick={() => navigation("/cart")} className="hover:text-verdeob cursor-pointer flex gap-x-2">
+        <a
+          onClick={() => navigation("/cart")}
+          className="hover:text-verdeob cursor-pointer flex gap-x-2"
+        >
           <CartIcon /> Cart
         </a>
-        <a onClick={() => navigation("/user/login")} className="hover:text-verdeob cursor-pointer">
-          <UserIcon className="size-10 p-2 bg-negropaco rounded-full hover:bg-white"/>
-        </a>
+        {userId && username ? (
+          <div className="relative">
+            <button
+              className="hover:text-verdeob cursor-pointer flex gap-1"
+              onClick={handleClickUser}
+            >
+              <UserIcon className="size-6" /> {username}
+            </button>
+            {isLogged && (
+              <div className="absolute left-4 bg-verdeob text-white rounded-lg shadow-lg mt-2">
+                <a
+                  onClick={() => navigation("/user/historial")}
+                  className="block px-4 py-2 hover:bg-white hover:text-verdeob"
+                  title="Historial"
+                >
+                  <HistoryIcon />
+                </a>
+                <a
+                  onClick={() => navigation("/user/tarjetas")}
+                  className="block px-4 py-2 hover:bg-white hover:text-verdeob"
+                  title="Metodos de Pago"
+                >
+                  <CardIcon />
+                </a>
+                <a
+                  onClick={() => {
+                    sessionStorage.removeItem("userId");
+                    sessionStorage.removeItem("username");
+                    window.location.reload();
+                  }}
+                  title="Cerrar Sesión"
+                  className="block px-4 py-2 hover:bg-white hover:text-verdeob"
+                >
+                  <LogoutIcon />
+                </a>
+              </div>
+            )}
+          </div>
+        ) : (
+          <a
+            onClick={() => navigation("/user/login")}
+            className="hover:text-verdeob cursor-pointer"
+          >
+            <UserIcon className="size-6" />
+          </a>
+        )}
       </div>
 
       {/* Mobile Menu */}
@@ -41,7 +104,11 @@ function NavBar() {
           className="text-white hover:text-verdeob focus:outline-none"
           onClick={toggleMenu}
         >
-          {isOpen ? <CloseIcon className="size-8"/> : <MenuIcon className="size-8"/>}
+          {isOpen ? (
+            <CloseIcon className="size-8" />
+          ) : (
+            <MenuIcon className="size-8" />
+          )}
         </button>
 
         {isOpen && (
@@ -82,15 +149,55 @@ function NavBar() {
             >
               Cart
             </a>
-            <a
-              onClick={() => {
-                navigation("/user/login");
-                setIsOpen(false);
-              }}
-              className="block text-white hover:text-black py-2 cursor-pointer transition duration-300"
-            >
-              Usuario
-            </a>
+            {userId && username ? (
+              <div className="relative">
+                <button
+                  className="block text-white hover:text-black py-2 cursor-pointer transition duration-300"
+                  onClick={handleClickUser}
+                >
+                  {username}
+                </button>
+                {isLogged && (
+                  <div className="absolute bg-verdeob text-white rounded-lg shadow-lg mt-2">
+                    <a
+                      onClick={() => {
+                        navigation("/user/historial");
+                        setIsOpen(false);
+                      }}
+                      className="block px-4 py-2 hover:bg-white hover:text-verdeob"
+                    >
+                      Historial
+                    </a>
+                    <a
+                      onClick={() => navigation("/user/tarjetas")}
+                      className="block px-4 py-2 hover:bg-white hover:text-verdeob"
+                    >
+                      Tarjetas
+                    </a>
+                    <a
+                      onClick={() => {
+                        sessionStorage.removeItem("userId");
+                        sessionStorage.removeItem("username");
+                        navigation("/user/login");
+                      }}
+                      className="block px-4 py-2 hover:bg-white hover:text-verdeob"
+                    >
+                      Logout
+                    </a>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <a
+                onClick={() => {
+                  navigation("/user/login");
+                  setIsOpen(false);
+                }}
+                className="block text-white hover:text-black py-2 cursor-pointer transition duration-300"
+              >
+                Iniciar Sesión
+              </a>
+            )}
           </div>
         )}
       </div>
