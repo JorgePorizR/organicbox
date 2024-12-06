@@ -33,7 +33,17 @@ cd <NOMBRE_DEL_PROYECTO>
 ```
 
 ### 2. Instalar dependencias
+
 #### Ejecutar el siguiente comando para instalar las dependencias necesarias
+
 ```bash
 - yarn install
 ```
+
+## 👨‍💻👨‍💻👩‍💻 Contribuidores
+
+Gracias a todos los que han contribuido a este proyecto:
+
+- Chistian Manuel Richter Quiroz
+- Andrea Belen Garcia Dorado
+- Jorge Poriz Rojas

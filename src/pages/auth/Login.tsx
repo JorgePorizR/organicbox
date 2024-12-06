@@ -78,7 +78,7 @@ function Login() {
                 className="border rounded w-full p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-verdeob text-negropaco"
               />
             </label>
-            {error && <p className="text-red-500 mb-4">{error}</p>}
+            {error && <p className="text-rojo mb-4">{error}</p>}
             <button
               className="bg-verdeob text-white text-sm font-semibold py-2 px-5 rounded-se-full rounded-es-full max-h-max border border-black transition duration-300 ease-in-out hover:bg-verdeclaro hover:text-black"
               type="submit"
